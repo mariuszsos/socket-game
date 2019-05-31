@@ -1,0 +1,10 @@
+{
+  "name": "socket-game",
+  "version": "0.0.1",
+  "description": "",
+  "dependencies": {
+    "express": "latest",
+    "reload": "^3.0.1",
+    "socket.io": "^2.1.1"
+  }
+}
