@@ -26,7 +26,7 @@ window.requestAnimationFrame(function () {
 			socket.on('player-connect', function() {
 				gameWaiting(false); 
 				gameWrapper(true);
-				//startGry();
+				//startGry(); nowa gra
 			});
 		} else if (playerNumber == -1) {
 			gameFull(); 
