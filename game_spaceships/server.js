@@ -12,7 +12,10 @@ var scores = {
 	blue: 0,
 	red: 0
 };
-var countPlayers = 0;
+var numPlayers = {
+	counter: 0,
+	max: 3
+};
 
 app.use(express.static(__dirname + '/public'));
 
@@ -22,36 +25,42 @@ res.sendFile(__dirname + '/index.html');
 
 io.on('connection', function (socket) {
 	console.log('a user connected: ', socket.id);
-	countPlayers = countPlayers + 1;
-	// create a new player and add it to our players object
-	players[socket.id] = {
-		rotation: 0,
-		x: Math.floor(Math.random() * 700) + 50,
-		y: Math.floor(Math.random() * 500) + 50,
-		playerId: socket.id,
-		team: (Math.floor(Math.random() * 2) == 0) ? 'red' : 'blue'
-	};
+	numPlayers.counter += 1;
 	
+	if(numPlayers.counter <= numPlayers.max) {
+		// create a new player and add it to our players object
+		players[socket.id] = {
+			rotation: 0,
+			x: Math.floor(Math.random() * 700) + 50,
+			y: Math.floor(Math.random() * 500) + 50,
+			playerId: socket.id,
+			team: (Math.floor(Math.random() * 2) == 0) ? 'red' : 'blue'
+		};
 	// send the players object to the new player
 	socket.emit('currentPlayers', players);
 	// send the star object to the new player
 	socket.emit('starLocation', star);
 	// send the current scores
-	socket.emit('playersUpdate', countPlayers);
+	socket.emit('playersUpdate', numPlayers);
 	// update all other players of the new player
 	socket.broadcast.emit('newPlayer', players[socket.id]);
+	socket.broadcast.emit('playersUpdate', numPlayers);
+	
+	} else {
+		socket.emit('gameIsFull', numPlayers.max);
+		//socket.broadcast.emit('gameIsFull', numPlayers.max);
+	}
 
-	socket.broadcast.emit('playersUpdate', countPlayers);
-	// when a player disconnects, remove them from our players object
+	// when a player disconnects, remove them from our players object	
 	socket.on('disconnect', function () {
 		console.log('user disconnected: ', socket.id);
-		countPlayers = countPlayers - 1;
-		if(countPlayers === 0) {
+		numPlayers.counter -= 1;
+		if(numPlayers.counter === 0) {
 			scores.blue = 0;
 			scores.red = 0;
 		}
 		delete players[socket.id];
-		socket.broadcast.emit('playersUpdate', countPlayers);
+		socket.broadcast.emit('playersUpdate', numPlayers.counter);
 		// emit a message to all players to remove this player
 		io.emit('disconnect', socket.id);
 	});

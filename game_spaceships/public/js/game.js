@@ -67,11 +67,18 @@ function create() {
 	this.blueScoreText = this.add.text(16, 16, '', { fontSize: '32px', fill: '#0000FF' });
 	this.redScoreText = this.add.text(584, 16, '', { fontSize: '32px', fill: '#FF0000' });
 	this.counterPlayersText = this.add.text(300, 550, '', { fontSize: '48px', fill: '#2f2f2f' });
+	this.gameFull = this.add.text(150, 150, '', { fontSize: '48px', fill: '#2f2f2f' });
+	this.gameFull2 = this.add.text(200, 200, '', { fontSize: '16px', fill: '#2f2f2f' });
 
-	this.socket.on('playersUpdate', function(countPlayers) {
-		self.counterPlayersText.setText('Graczy w grze: ' + countPlayers);
+	this.socket.on('playersUpdate', function(numPlayers) {
+		self.counterPlayersText.setText('Graczy w grze:' + numPlayers.counter + '/' + numPlayers.max);
 	});
 
+	this.socket.on('gameIsFull', function(numPlayersMax) {
+		self.gameFull.setText('Gra jest pełna!');
+		self.gameFull2.setText('Maksymalna ilość graczy w grze: ' +numPlayersMax);
+	});
+	
 	this.socket.on('scoreUpdate', function (scores) {
 		self.blueScoreText.setText('Blue: ' + scores.blue);
 		self.redScoreText.setText('Red: ' + scores.red);
