@@ -15,7 +15,7 @@ function gameWrapper(show) {
 	messageDisplay('.wrapper', show);
 }
 
-
+ 
 window.requestAnimationFrame(function () {
 	
 	const socket = io();
