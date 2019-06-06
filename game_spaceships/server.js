@@ -41,7 +41,6 @@ io.on('connection', function (socket) {
 			team: getTeamWithLessPlayers()
 		};
 
-
 		// send the players object to the new player
 		socket.emit('currentPlayers', players);
 		// send the star object to the new player
@@ -76,7 +75,6 @@ io.on('connection', function (socket) {
 		// emit a message to all players to remove this player
 		io.emit('disconnect', socket.id);
 	});
-
 
 	socket.emit('scoreUpdate', scores);
 	// when a player moves, update the player data

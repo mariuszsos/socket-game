@@ -13,13 +13,13 @@ class PlayScene extends Phaser.Scene {
 	create() {
 		var self = this;
 		this.socket = io();
-		
+
 		this.socket.on('gameIsFull', maxNumberOfPlayers => {
 			game.scene.start('fullGame', { max: maxNumberOfPlayers });
 			game.scene.remove(this.scene.key);
 		})
-		
-		this.add.image(800, 600, 'background').setOrigin(1,1);
+
+		this.add.image(800, 600, 'background').setOrigin(1, 1);
 		this.otherPlayers = this.physics.add.group();
 
 		this.socket.on('currentPlayers', function (players) {
@@ -35,7 +35,7 @@ class PlayScene extends Phaser.Scene {
 		this.socket.on('newPlayer', function (playerInfo) {
 			addOtherPlayers(self, playerInfo);
 		});
-		
+
 		this.socket.on('disconnect', function (playerId) {
 			self.otherPlayers.getChildren().forEach(function (otherPlayer) {
 				if (playerId === otherPlayer.playerId) {
@@ -55,7 +55,7 @@ class PlayScene extends Phaser.Scene {
 
 		this.cursors = this.input.keyboard.createCursorKeys();
 		this.blueScoreText = this.add.text(16, 16, '', { fontSize: '32px', fill: '#0060a1' });
-		this.redScoreText = this.add.text(584, 16, '', { fontSize: '32px', fill: '#FF0000' });
+		this.redScoreText = this.add.text(534, 16, '', { fontSize: '32px', fill: '#FF0000' });
 		this.counterPlayersText = this.add.text(300, 550, '', { fontSize: '36px', fill: '#FFF' });
 
 		this.socket.on('playersUpdate', function (numPlayers) {
@@ -64,9 +64,9 @@ class PlayScene extends Phaser.Scene {
 		});
 
 		this.socket.on('scoreUpdate', function (scores) {
-			self.blueScoreText.setText('Blue: ' + scores.blue);
+			self.blueScoreText.setText('Niebiescy: ' + scores.blue);
 			self.blueScoreText.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
-			self.redScoreText.setText('Red: ' + scores.red);
+			self.redScoreText.setText('Czerwoni: ' + scores.red);
 			self.redScoreText.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
 		});
 
