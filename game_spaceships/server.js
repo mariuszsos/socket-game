@@ -64,10 +64,12 @@ io.on('connection', function (socket) {
 			scores.blue = 0;
 			scores.red = 0;
 		}
-		if (players[socket.id].team === 'blue') {
-			teams.blue--;
-		} else {
-			teams.red--;
+		if (players[socket.id]) {
+			if (players[socket.id].team === 'blue') {
+				teams.blue--;
+			} else {
+				teams.red--;
+			}
 		}
 		delete players[socket.id];
 		socket.broadcast.emit('playersUpdate', numPlayers);
